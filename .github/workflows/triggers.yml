@@ -1,0 +1,57 @@
+name: Triggers
+run-name: ¡Estoy aprendiendo a usar diferentes Triggers!
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '**/*.php'
+  issues:
+    types:
+      - labeled
+  workflow_dispatch:
+    inputs:
+      lenguaje_favorito:
+        description: 'Lenguaje favorito'
+        default: PHP
+        required: true
+        type: choice
+        options:
+          - PHP
+          - JavaScript
+          - Go
+      nombre:
+        description: 'Tu nombre'
+        required: true
+        default: Juan
+        type: string
+  schedule:
+    - cron:  '15 22 * * *'
+jobs:
+  hola-mundo-manual:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Definir nombre
+        run: echo "USERNAME=${{ github.event.inputs.nombre }}" >> $GITHUB_ENV
+      - name: Definir lenguaje
+        run: echo "LANGUAGE=${{ github.event.inputs.lenguaje_favorito }}" >> $GITHUB_ENV
+      - name: Correr script
+        run: |
+          if [ "$LANGUAGE" = "PHP" ]; then php hola-mundo.php;
+          elif [ "$LANGUAGE" = "JavaScript" ]; then node hola-mundo.js;
+          elif [ "$LANGUAGE" = "Go" ]; then go run hola-mundo.go; fi
+  hola-mundo:
+    if: ${{ github.event_name != 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Definir variable
+        run: echo "USERNAME=${{ github.actor }}" >> $GITHUB_ENV
+      - name: Correr script
+        run: php hola-mundo.php

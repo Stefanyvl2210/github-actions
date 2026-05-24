@@ -1,6 +1,6 @@
 name: Aprendiendo GitHub Actions
 run-name: ¡Estoy aprendiendo GitHub Actions!
-on: [push, pull_request]
+on: [push]
 jobs:
   hola-mundo:
     runs-on: ubuntu-latest
@@ -13,5 +13,5 @@ jobs:
         with:
           php-version: '8.2'
 
-      - name: Ejecutar hola-mundo.php
+      - name: Correr script
         run: php hola-mundo.php
